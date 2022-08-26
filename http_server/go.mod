@@ -2,12 +2,7 @@ module githib.com/ralvescosta/gokit_examples/httpserver
 
 go 1.18
 
-require (
-	github.com/ralvescosta/gokit/env v0.0.0-20220820082824-85d52a116995
-	github.com/ralvescosta/gokit/http v0.0.0-20220719090105-ea00f5566aad
-	github.com/ralvescosta/gokit/logging v0.0.0-20220820082824-85d52a116995
-	github.com/ralvescosta/gokit/telemetry v0.0.0-20220820082824-85d52a116995
-)
+require github.com/ralvescosta/gokit v1.0.4
 
 require (
 	github.com/cenkalti/backoff/v4 v4.1.3 // indirect
