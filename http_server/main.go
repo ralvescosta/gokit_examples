@@ -11,7 +11,11 @@ import (
 	"github.com/ralvescosta/gokit/env"
 	"github.com/ralvescosta/gokit/http/server"
 	"github.com/ralvescosta/gokit/logging"
-	"github.com/ralvescosta/gokit/telemetry/trace"
+	"github.com/ralvescosta/gokit/otel/metric"
+	"github.com/ralvescosta/gokit/otel/trace"
+	"go.opentelemetry.io/otel/metric/global"
+	"go.opentelemetry.io/otel/metric/instrument"
+	"go.uber.org/zap/zapcore"
 )
 
 func main() {
@@ -31,24 +35,51 @@ func main() {
 		panic(err)
 	}
 
-	close, err := trace.
+	closeTracerExporter, err := trace.
 		NewOTLP(cfg, logger).
 		WithApiKeyHeader().
 		Build(ctx)
 	if err != nil {
 		panic(err)
 	}
-	defer close(ctx)
+	defer closeTracerExporter(ctx)
+
+	closeMetricExporter, err := metric.
+		NewOTLP(cfg, logger).
+		WithApiKeyHeader().
+		Build(ctx)
+	if err != nil {
+		panic(err)
+	}
+	defer closeMetricExporter(ctx)
+
+	meter := global.Meter("github.com/gokit_example/http_server")
+	counter, err := meter.SyncFloat64().Counter("important_metric", instrument.WithDescription("Measures the cumulative /hello requests"))
+	if err != nil {
+		logger.Fatal("Failed to create the instrument", zapcore.Field{
+			Key:       "err",
+			Interface: err,
+		})
+	}
+	counter.Add(ctx, 1.0)
+	counter.Add(ctx, 1.0)
+	counter.Add(ctx, 1.0)
+	counter.Add(ctx, 1.0)
+	counter.Add(ctx, 1.0)
+	counter.Add(ctx, 1.0)
+	counter.Add(ctx, 1.0)
+	counter.Add(ctx, 1.0)
 
 	sig := make(chan os.Signal, 1)
 	signal.Notify(sig, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
 
 	httpServer := server.
 		New(cfg, logger, sig).
-		WithProfiling().
+		WithTracing().
 		Build()
 
 	httpServer.RegisterRoute(http.MethodGet, "/hello", func(w http.ResponseWriter, r *http.Request) {
+		counter.Add(ctx, 1.0)
 		w.WriteHeader(200)
 		w.Write([]byte("oi"))
 	})
