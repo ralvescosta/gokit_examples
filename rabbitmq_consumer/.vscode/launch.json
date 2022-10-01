@@ -1,0 +1,27 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "API",
+      "type": "go",
+      "request": "launch",
+      "mode": "auto",
+      "program": "${workspaceFolder}",
+      "env": {
+        "GO_ENV": "local",
+      },
+      "args": ["api", ""]
+    },
+    {
+      "name": "Consumer",
+      "type": "go",
+      "request": "launch",
+      "mode": "auto",
+      "program": "${workspaceFolder}",
+      "env": {
+        "GO_ENV": "local",
+      },
+      "args": ["consumer", ""]
+    }
+  ]
+}
