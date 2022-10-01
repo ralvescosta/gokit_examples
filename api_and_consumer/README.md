@@ -11,5 +11,7 @@ To run this application follow the steps bellow:
 4 - Execute the command:
 
   ```bash
-    make run
+    make api
+    
+    make consumer
   ```

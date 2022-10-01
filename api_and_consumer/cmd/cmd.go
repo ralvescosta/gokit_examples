@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"os"
+
 	"github.com/ralvescosta/gokit/env"
 	"github.com/ralvescosta/gokit/logging"
 	"github.com/ralvescosta/gokit_example/api_and_consumer/pkg"
@@ -16,8 +18,10 @@ type CommonParams struct {
 	Logger logging.Logger
 }
 
-func RunCommand(runner any) func(*cobra.Command, []string) error {
-	return func(c *cobra.Command, s []string) error {
+func RunCommand(cmd string, runner any) func(*cobra.Command, []string) error {
+	return func(c *cobra.Command, args []string) error {
+		os.Setenv("APP_NAME", cmd)
+
 		ioc, err := pkg.NewContainer()
 		if err != nil {
 			return err

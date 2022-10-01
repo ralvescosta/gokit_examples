@@ -33,5 +33,5 @@ func api(params APIParams) error {
 var ApiCmd = &cobra.Command{
 	Use:   "api",
 	Short: "API Server Command",
-	RunE:  RunCommand(api),
+	RunE:  RunCommand("api", api),
 }

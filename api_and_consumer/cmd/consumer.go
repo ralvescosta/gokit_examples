@@ -50,5 +50,5 @@ func consumer(params ConsumerParams) error {
 var ConsumerCmd = &cobra.Command{
 	Use:   "consumer",
 	Short: "Consumer Command",
-	RunE:  RunCommand(consumer),
+	RunE:  RunCommand("consumer", consumer),
 }

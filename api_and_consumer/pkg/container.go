@@ -30,7 +30,7 @@ func NewContainer() (*dig.Container, error) {
 		return nil, err
 	}
 
-	container.Provide(func() *env.Config { return cfg })
+	container.Provide(ProvideConfigs(cfg))
 	container.Provide(logging.NewDefaultLogger)
 	container.Invoke(InvokeJaegerTracingExporter)
 	container.Provide(ProvideSignal)
@@ -40,6 +40,12 @@ func NewContainer() (*dig.Container, error) {
 	container.Provide(consumers.NewBasicConsumer)
 
 	return container, nil
+}
+
+func ProvideConfigs(cfg *env.Config) func() *env.Config {
+	return func() *env.Config {
+		return cfg
+	}
 }
 
 func InvokeJaegerTracingExporter(cfg *env.Config, logger logging.Logger) {
