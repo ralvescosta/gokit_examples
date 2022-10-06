@@ -1,5 +1,5 @@
 containers:
-	docker-compose -f ./.containers/docker-compose.yml up
+	docker-compose -f ./.containers/docker-compose.yml up -d
 
 download: containers
 	go mod download

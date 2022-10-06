@@ -8,6 +8,7 @@ import (
 
 	"github.com/ralvescosta/gokit/env"
 	"github.com/ralvescosta/gokit/logging"
+	"github.com/ralvescosta/gokit/metric"
 	"github.com/ralvescosta/gokit/tracing"
 	"github.com/ralvescosta/gokit_example/http_server/pkg/consumers"
 	"github.com/ralvescosta/gokit_example/http_server/pkg/handlers"
@@ -23,7 +24,6 @@ func NewContainer() (*dig.Container, error) {
 		New().
 		Tracing().
 		HTTPServer().
-		Messaging().
 		Build()
 
 	if err != nil {
@@ -49,7 +49,11 @@ func InvokeOTLPTracingExporter(cfg *env.Config, logger logging.Logger) {
 		Build(context.Background())
 }
 
-func InvokeMetricsExporter() {}
+func InvokeMetricsExporter(cfg *env.Config, logger logging.Logger) {
+	metric.NewOTLP(cfg, logger).
+		WithApiKeyHeader().
+		Build(context.Background())
+}
 
 func ProvideSignal() chan os.Signal {
 	sig := make(chan os.Signal, 1)
