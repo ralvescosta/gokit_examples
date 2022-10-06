@@ -23,7 +23,6 @@ func NewContainer() (*dig.Container, error) {
 		New().
 		Tracing().
 		HTTPServer().
-		Messaging().
 		Build()
 
 	if err != nil {
