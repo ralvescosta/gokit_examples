@@ -1,4 +1,4 @@
-# HTTP API Example
+# HTTP API Example with OTLP Exporter
 
 To run this application follow the steps bellow:
 
