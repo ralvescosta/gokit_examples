@@ -9,6 +9,7 @@ import (
 	"github.com/ralvescosta/gokit/env"
 	"github.com/ralvescosta/gokit/logging"
 	"github.com/ralvescosta/gokit/metric"
+	"github.com/ralvescosta/gokit/metric/basic"
 	"github.com/ralvescosta/gokit/tracing"
 	"github.com/ralvescosta/gokit_example/http_server/pkg/consumers"
 	"github.com/ralvescosta/gokit_example/http_server/pkg/handlers"
@@ -53,6 +54,8 @@ func InvokeMetricsExporter(cfg *env.Config, logger logging.Logger) {
 	metric.NewOTLP(cfg, logger).
 		WithApiKeyHeader().
 		Build(context.Background())
+
+	go basic.BasicMetricsCollector(logger)
 }
 
 func ProvideSignal() chan os.Signal {
