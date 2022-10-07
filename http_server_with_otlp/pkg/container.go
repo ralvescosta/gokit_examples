@@ -1,7 +1,6 @@
 package pkg
 
 import (
-	"context"
 	"os"
 	"os/signal"
 	"syscall"
@@ -47,15 +46,15 @@ func NewContainer() (*dig.Container, error) {
 func InvokeOTLPTracingExporter(cfg *env.Config, logger logging.Logger) {
 	tracing.NewOTLP(cfg, logger).
 		WithApiKeyHeader().
-		Build(context.Background())
+		Build()
 }
 
 func InvokeMetricsExporter(cfg *env.Config, logger logging.Logger) {
 	metric.NewOTLP(cfg, logger).
 		WithApiKeyHeader().
-		Build(context.Background())
+		Build()
 
-	go basic.BasicMetricsCollector(logger)
+	go basic.BasicMetricsCollector(logger, 30)
 }
 
 func ProvideSignal() chan os.Signal {
