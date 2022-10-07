@@ -1,11 +1,15 @@
 package handlers
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/ralvescosta/gokit/httpw"
 	"github.com/ralvescosta/gokit/logging"
 	"github.com/ralvescosta/gokit_example/http_server/pkg/internal/services"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/codes"
+	"go.opentelemetry.io/otel/trace"
 )
 
 type (
@@ -16,6 +20,7 @@ type (
 	httpHandlers struct {
 		service services.BookService
 		logger  logging.Logger
+		tracer  trace.Tracer
 	}
 )
 
@@ -33,13 +38,24 @@ func (h *httpHandlers) postHandler(w http.ResponseWriter, req *http.Request) {
 }
 
 func (h *httpHandlers) getHandler(w http.ResponseWriter, req *http.Request) {
+	_, span := h.tracer.Start(req.Context(), "getHandler")
+	defer span.End()
+
+	span.SetStatus(codes.Error, "some error")
+	span.RecordError(errors.New("some error"))
+
 	h.logger.Info("getHandler")
 	h.service.GetBook(req.Context())
 }
 
 func (h *httpHandlers) listHandler(w http.ResponseWriter, req *http.Request) {
+	_, span := h.tracer.Start(req.Context(), "listHandler")
+	defer span.End()
+
 	h.logger.Info("listHandler")
 	h.service.ListBook(req.Context())
+
+	w.Write([]byte("oi"))
 }
 
 func (h *httpHandlers) putHandler(w http.ResponseWriter, req *http.Request) {
@@ -53,5 +69,5 @@ func (h *httpHandlers) deleteHandler(w http.ResponseWriter, req *http.Request) {
 }
 
 func NewHandler(logger logging.Logger, service services.BookService) HTTPHandlers {
-	return &httpHandlers{service, logger}
+	return &httpHandlers{service, logger, otel.Tracer("http handler")}
 }
