@@ -1,7 +1,6 @@
 package pkg
 
 import (
-	"context"
 	"os"
 	"os/signal"
 	"syscall"
@@ -42,7 +41,7 @@ func NewContainer() (*dig.Container, error) {
 }
 
 func InvokeJaegerTracingExporter(cfg *env.Config, logger logging.Logger) {
-	tracing.NewJaeger(cfg, logger).Build(context.Background())
+	tracing.NewJaeger(cfg, logger).Build()
 }
 
 func ProvideSignal() chan os.Signal {
