@@ -54,7 +54,7 @@ func InvokeMetricsExporter(cfg *env.Config, logger logging.Logger) {
 		WithApiKeyHeader().
 		Build()
 
-	go basic.BasicMetricsCollector(logger, 2)
+	basic.BasicMetricsCollector(logger)
 }
 
 func ProvideSignal() chan os.Signal {
