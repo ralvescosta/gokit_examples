@@ -7,8 +7,8 @@ import (
 
 	"github.com/ralvescosta/gokit/env"
 	"github.com/ralvescosta/gokit/logging"
-	"github.com/ralvescosta/gokit/metric"
-	"github.com/ralvescosta/gokit/metric/basic"
+	"github.com/ralvescosta/gokit/metrics"
+	"github.com/ralvescosta/gokit/metrics/system"
 	"github.com/ralvescosta/gokit/tracing"
 	"github.com/ralvescosta/gokit_example/http_server_with_otlp/pkg/consumers"
 	"github.com/ralvescosta/gokit_example/http_server_with_otlp/pkg/handlers"
@@ -22,7 +22,7 @@ func NewContainer() (*dig.Container, error) {
 
 	cfg, err := env.
 		New().
-		Tracing().
+		Otel().
 		HTTPServer().
 		Build()
 
@@ -30,7 +30,7 @@ func NewContainer() (*dig.Container, error) {
 		return nil, err
 	}
 
-	container.Provide(func() *env.Config { return cfg })
+	container.Provide(func() *env.Configs { return cfg })
 	container.Provide(logging.NewDefaultLogger)
 	container.Invoke(InvokeOTLPTracingExporter)
 	container.Invoke(InvokeMetricsExporter)
@@ -43,18 +43,18 @@ func NewContainer() (*dig.Container, error) {
 	return container, nil
 }
 
-func InvokeOTLPTracingExporter(cfg *env.Config, logger logging.Logger) {
+func InvokeOTLPTracingExporter(cfg *env.Configs, logger logging.Logger) {
 	tracing.NewOTLP(cfg, logger).
 		WithApiKeyHeader().
 		Build()
 }
 
-func InvokeMetricsExporter(cfg *env.Config, logger logging.Logger) {
-	metric.NewOTLP(cfg, logger).
+func InvokeMetricsExporter(cfg *env.Configs, logger logging.Logger) {
+	metrics.NewOTLP(cfg, logger).
 		WithApiKeyHeader().
 		Build()
 
-	basic.BasicMetricsCollector(logger)
+	system.BasicMetricsCollector(logger)
 }
 
 func ProvideSignal() chan os.Signal {
