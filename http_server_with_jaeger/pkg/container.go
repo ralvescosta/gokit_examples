@@ -20,7 +20,7 @@ func NewContainer() (*dig.Container, error) {
 
 	cfg, err := env.
 		New().
-		Tracing().
+		Otel().
 		HTTPServer().
 		Build()
 
@@ -28,7 +28,7 @@ func NewContainer() (*dig.Container, error) {
 		return nil, err
 	}
 
-	container.Provide(func() *env.Config { return cfg })
+	container.Provide(func() *env.Configs { return cfg })
 	container.Provide(logging.NewDefaultLogger)
 	container.Invoke(InvokeJaegerTracingExporter)
 	container.Provide(ProvideSignal)
@@ -40,7 +40,7 @@ func NewContainer() (*dig.Container, error) {
 	return container, nil
 }
 
-func InvokeJaegerTracingExporter(cfg *env.Config, logger logging.Logger) {
+func InvokeJaegerTracingExporter(cfg *env.Configs, logger logging.Logger) {
 	tracing.NewJaeger(cfg, logger).Build()
 }
 
