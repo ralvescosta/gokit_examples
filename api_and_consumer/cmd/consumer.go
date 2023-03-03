@@ -33,7 +33,7 @@ func consumer(params ConsumerParams) error {
 		Exchange(rabbitmq.NewFanout("observability")).
 		Queue(rabbitmq.NewQueue(QueueName).WithDql().WithRetry(3, 30*time.Second).Binding("observability", ""))
 
-	client, err := rabbitmq.NewClient(params.Cfg, params.Logger).InstallTopology(topology)
+	client, err := rabbitmq.NewClient(params.Cfg.RabbitMqConfigs, params.Logger).InstallTopology(topology)
 	if err != nil {
 		params.Logger.Error("could not start rabbitmq client", zap.Error(err))
 	}

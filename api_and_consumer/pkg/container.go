@@ -20,9 +20,9 @@ func NewContainer() (*dig.Container, error) {
 
 	cfg, err := env.
 		New().
-		Tracing().
+		Otel().
 		HTTPServer().
-		Messaging().
+		RabbitMQ().
 		Build()
 
 	if err != nil {
@@ -41,13 +41,13 @@ func NewContainer() (*dig.Container, error) {
 	return container, nil
 }
 
-func ProvideConfigs(cfg *env.Config) func() *env.Config {
-	return func() *env.Config {
+func ProvideConfigs(cfg *env.Configs) func() *env.Configs {
+	return func() *env.Configs {
 		return cfg
 	}
 }
 
-func InvokeJaegerTracingExporter(cfg *env.Config, logger logging.Logger) {
+func InvokeJaegerTracingExporter(cfg *env.Configs, logger logging.Logger) {
 	tracing.NewJaeger(cfg, logger).Build()
 }
 
