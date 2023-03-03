@@ -12,7 +12,7 @@ import (
 type CommonParams struct {
 	dig.In
 
-	Cfg    *env.Config
+	Cfg    *env.Configs
 	Logger logging.Logger
 }
 

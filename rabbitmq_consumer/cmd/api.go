@@ -20,7 +20,7 @@ func api(params APIParams) error {
 	params.Logger.Debug("Stating HTTP API...")
 
 	router := httpw.
-		NewServer(params.Cfg, params.Logger, params.Sig).
+		NewServer(params.Cfg.HTTPConfigs, params.Logger, params.Sig).
 		WithTracing().
 		WithMetrics(httpw.PrometheusMetricKind).
 		Build()
