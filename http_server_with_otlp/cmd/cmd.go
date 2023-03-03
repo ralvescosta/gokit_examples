@@ -3,7 +3,7 @@ package cmd
 import (
 	"github.com/ralvescosta/gokit/env"
 	"github.com/ralvescosta/gokit/logging"
-	"github.com/ralvescosta/gokit_example/http_server/pkg"
+	"github.com/ralvescosta/http_server_with_otlp/http_server/pkg"
 	"github.com/spf13/cobra"
 	"go.uber.org/dig"
 	"go.uber.org/zap"

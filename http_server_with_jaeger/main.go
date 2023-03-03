@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/ralvescosta/gokit_example/http_server/cmd"
+	"github.com/ralvescosta/gokit_example/http_server_with_jaeger/cmd"
 	"github.com/spf13/cobra"
 )
 

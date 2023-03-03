@@ -5,7 +5,7 @@ import (
 
 	"github.com/ralvescosta/gokit/httpw"
 	"github.com/ralvescosta/gokit/logging"
-	"github.com/ralvescosta/gokit_example/http_server/pkg/internal/services"
+	"github.com/ralvescosta/gokit_example/http_server_with_jaeger/pkg/internal/services"
 )
 
 type (

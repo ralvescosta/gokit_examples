@@ -10,10 +10,10 @@ import (
 	"github.com/ralvescosta/gokit/metric"
 	"github.com/ralvescosta/gokit/metric/basic"
 	"github.com/ralvescosta/gokit/tracing"
-	"github.com/ralvescosta/gokit_example/http_server/pkg/consumers"
-	"github.com/ralvescosta/gokit_example/http_server/pkg/handlers"
-	"github.com/ralvescosta/gokit_example/http_server/pkg/internal/repositories"
-	"github.com/ralvescosta/gokit_example/http_server/pkg/internal/services"
+	"github.com/ralvescosta/gokit_example/http_server_with_otlp/pkg/consumers"
+	"github.com/ralvescosta/gokit_example/http_server_with_otlp/pkg/handlers"
+	"github.com/ralvescosta/gokit_example/http_server_with_otlp/pkg/internal/repositories"
+	"github.com/ralvescosta/gokit_example/http_server_with_otlp/pkg/internal/services"
 	"go.uber.org/dig"
 )
 

@@ -8,10 +8,10 @@ import (
 	"github.com/ralvescosta/gokit/env"
 	"github.com/ralvescosta/gokit/logging"
 	"github.com/ralvescosta/gokit/tracing"
-	"github.com/ralvescosta/gokit_example/http_server/pkg/consumers"
-	"github.com/ralvescosta/gokit_example/http_server/pkg/handlers"
-	"github.com/ralvescosta/gokit_example/http_server/pkg/internal/repositories"
-	"github.com/ralvescosta/gokit_example/http_server/pkg/internal/services"
+	"github.com/ralvescosta/gokit_example/http_server_with_jaeger/pkg/consumers"
+	"github.com/ralvescosta/gokit_example/http_server_with_jaeger/pkg/handlers"
+	"github.com/ralvescosta/gokit_example/http_server_with_jaeger/pkg/internal/repositories"
+	"github.com/ralvescosta/gokit_example/http_server_with_jaeger/pkg/internal/services"
 	"go.uber.org/dig"
 )
 

@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/ralvescosta/gokit_example/http_server/pkg/internal/services"
+	"github.com/ralvescosta/gokit_example/http_server_with_jaeger/pkg/internal/services"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/trace"
 )

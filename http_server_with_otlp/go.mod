@@ -1,4 +1,4 @@
-module github.com/ralvescosta/gokit_example/http_server
+module github.com/ralvescosta/gokit_example/http_server_with_otlp
 
 go 1.18
 
