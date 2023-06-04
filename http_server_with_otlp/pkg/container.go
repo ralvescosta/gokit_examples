@@ -5,13 +5,14 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/ralvescosta/gokit/env"
+	"github.com/ralvescosta/gokit/configs"
+	configsBuilder "github.com/ralvescosta/gokit/configs_builder"
 	"github.com/ralvescosta/gokit/logging"
 	"github.com/ralvescosta/gokit/metrics"
 	"github.com/ralvescosta/gokit/metrics/system"
 	"github.com/ralvescosta/gokit/tracing"
 	"github.com/ralvescosta/gokit_example/http_server_with_otlp/pkg/consumers"
-	"github.com/ralvescosta/gokit_example/http_server_with_otlp/pkg/handlers"
+	httpHandlers "github.com/ralvescosta/gokit_example/http_server_with_otlp/pkg/http_handlers"
 	"github.com/ralvescosta/gokit_example/http_server_with_otlp/pkg/internal/repositories"
 	"github.com/ralvescosta/gokit_example/http_server_with_otlp/pkg/internal/services"
 	"go.uber.org/dig"
@@ -20,36 +21,36 @@ import (
 func NewContainer() (*dig.Container, error) {
 	container := dig.New()
 
-	cfg, err := env.
-		New().
+	cfg, err := configsBuilder.NewConfigsBuilder().
+		HTTP().
 		Otel().
-		HTTPServer().
 		Build()
 
 	if err != nil {
 		return nil, err
 	}
 
-	container.Provide(func() *env.Configs { return cfg })
+	container.Provide(func() *configs.Configs { return cfg.(*configs.Configs) })
+	container.Provide(func() *configs.AppConfigs { return cfg.(*configs.Configs).AppConfigs })
 	container.Provide(logging.NewDefaultLogger)
 	container.Invoke(InvokeOTLPTracingExporter)
 	container.Invoke(InvokeMetricsExporter)
 	container.Provide(ProvideSignal)
 	container.Provide(repositories.NewBookRepository)
 	container.Provide(services.NewBookService)
-	container.Provide(handlers.NewHandler)
+	container.Provide(httpHandlers.NewHandler)
 	container.Provide(consumers.NewBasicConsumer)
 
 	return container, nil
 }
 
-func InvokeOTLPTracingExporter(cfg *env.Configs, logger logging.Logger) {
+func InvokeOTLPTracingExporter(cfg *configs.Configs, logger logging.Logger) {
 	tracing.NewOTLP(cfg, logger).
 		WithApiKeyHeader().
 		Build()
 }
 
-func InvokeMetricsExporter(cfg *env.Configs, logger logging.Logger) {
+func InvokeMetricsExporter(cfg *configs.Configs, logger logging.Logger) {
 	metrics.NewOTLP(cfg, logger).
 		WithApiKeyHeader().
 		Build()

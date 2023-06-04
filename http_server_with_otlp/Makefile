@@ -1,3 +1,9 @@
+install:
+	@go install github.com/swaggo/swag/cmd/swag@latest
+
+swagger-gen:
+	@swag init
+
 containers:
 	docker-compose -f ./.containers/docker-compose.yml up -d
 

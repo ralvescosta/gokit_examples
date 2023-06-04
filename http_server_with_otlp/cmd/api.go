@@ -3,24 +3,25 @@ package cmd
 import (
 	"os"
 
-	"github.com/ralvescosta/gokit_example/http_server_with_otlp/pkg/handlers"
-	"github.com/spf13/cobra"
+	httpHandlers "github.com/ralvescosta/gokit_example/http_server_with_otlp/pkg/http_handlers"
 
 	"github.com/ralvescosta/gokit/httpw"
+	"github.com/spf13/cobra"
 )
 
 type APIParams struct {
 	CommonParams
 
 	Sig      chan os.Signal
-	Handlers handlers.HTTPHandlers
+	Handlers httpHandlers.HTTPHandlers
 }
 
 func api(params APIParams) error {
 	params.Logger.Debug("Stating HTTP API...")
 
 	router := httpw.
-		NewServer(params.Cfg.HTTPConfigs, params.Logger, params.Sig).
+		NewHTTPServerBuilder(params.Cfg.HTTPConfigs, params.Logger).
+		Signal(params.Sig).
 		WithTracing().
 		Build()
 

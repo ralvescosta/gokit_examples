@@ -1,0 +1,82 @@
+definitions:
+  httpHandlers.Book:
+    properties:
+      id:
+        type: integer
+    type: object
+  httpHandlers.HTTPError:
+    properties:
+      id:
+        type: integer
+    type: object
+info:
+  contact: {}
+paths:
+  /books:
+    post:
+      consumes:
+      - application/json
+      description: Create a new Book
+      parameters:
+      - description: Add Book
+        in: body
+        name: books
+        required: true
+        schema:
+          $ref: '#/definitions/httpHandlers.Book'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/httpHandlers.Book'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httpHandlers.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httpHandlers.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httpHandlers.HTTPError'
+      summary: CreateBook
+      tags:
+      - books
+  /books/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get Book By ID
+      parameters:
+      - description: Book ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httpHandlers.Book'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httpHandlers.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httpHandlers.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httpHandlers.HTTPError'
+      summary: GetBook
+      tags:
+      - books
+swagger: "2.0"
