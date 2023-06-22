@@ -5,7 +5,7 @@ import (
 
 	httpHandlers "github.com/ralvescosta/gokit_example/http_server_with_otlp/pkg/http_handlers"
 
-	"github.com/ralvescosta/gokit/httpw"
+	"github.com/ralvescosta/gokit/httpw/server"
 	"github.com/spf13/cobra"
 )
 
@@ -19,10 +19,11 @@ type APIParams struct {
 func api(params APIParams) error {
 	params.Logger.Debug("Stating HTTP API...")
 
-	router := httpw.
-		NewHTTPServerBuilder(params.Cfg.HTTPConfigs, params.Logger).
+	router := server.
+		NewHTTPServerBuilder(params.Cfg, params.Logger).
 		Signal(params.Sig).
 		WithTracing().
+		WithOpenAPI().
 		Build()
 
 	params.Handlers.Install(router)

@@ -4,20 +4,18 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/ralvescosta/gokit/httpw"
+	"github.com/ralvescosta/gokit/httpw/server"
 	"github.com/ralvescosta/gokit/logging"
-	httpSwagger "github.com/swaggo/http-swagger"
+	_ "github.com/ralvescosta/gokit_example/http_server_with_otlp/docs"
+	"github.com/ralvescosta/gokit_example/http_server_with_otlp/pkg/internal/services"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/trace"
-
-	_ "github.com/ralvescosta/gokit_example/http_server_with_otlp/docs"
-	"github.com/ralvescosta/gokit_example/http_server_with_otlp/pkg/internal/services"
 )
 
 type (
 	HTTPHandlers interface {
-		Install(router httpw.HTTPServer)
+		Install(router server.HTTPServer)
 	}
 
 	httpHandlers struct {
@@ -27,16 +25,14 @@ type (
 	}
 )
 
-func (h *httpHandlers) Install(router httpw.HTTPServer) {
-	router.RegisterRoute(http.MethodPost, "/books", h.postHandler)
-	router.RegisterRoute(http.MethodGet, "/books/{id}", h.getHandler)
-	router.RegisterRoute(http.MethodGet, "/books", h.listHandler)
-	router.RegisterRoute(http.MethodPut, "/books", h.putHandler)
-	router.RegisterRoute(http.MethodDelete, "/books", h.deleteHandler)
-
-	router.RegisterRoute(http.MethodGet, "/swagger/*", httpSwagger.Handler(
-		httpSwagger.URL("http://localhost:3333/swagger/doc.json"),
-	))
+func (h *httpHandlers) Install(router server.HTTPServer) {
+	router.Group("/books", []*server.Route{
+		server.NewRouteBuilder().Path("/").Method(http.MethodPost).Handler(h.postHandler).Build(),
+		server.NewRouteBuilder().Path("/{id}").Method(http.MethodGet).Handler(h.getHandler).Build(),
+		server.NewRouteBuilder().Path("/").Method(http.MethodGet).Handler(h.listHandler).Build(),
+		server.NewRouteBuilder().Path("/{id}").Method(http.MethodPut).Handler(h.putHandler).Build(),
+		server.NewRouteBuilder().Path("/{id}").Method(http.MethodDelete).Handler(h.deleteHandler).Build(),
+	})
 }
 
 // CreateBook
@@ -50,7 +46,7 @@ func (h *httpHandlers) Install(router httpw.HTTPServer) {
 // @Failure      400  {object}  httpHandlers.HTTPError
 // @Failure      404  {object}  httpHandlers.HTTPError
 // @Failure      500  {object}  httpHandlers.HTTPError
-// @Router       /books [post]
+// @Router       /books/ [post]
 func (h *httpHandlers) postHandler(w http.ResponseWriter, req *http.Request) {
 	h.logger.Info("postHandler")
 	h.service.RegisterBook(req.Context())
