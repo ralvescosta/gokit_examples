@@ -4,6 +4,7 @@ import (
 	"errors"
 	"net/http"
 
+	"github.com/ralvescosta/gokit/httpw/middlewares"
 	"github.com/ralvescosta/gokit/httpw/server"
 	"github.com/ralvescosta/gokit/logging"
 	_ "github.com/ralvescosta/gokit_example/http_server_with_otlp/docs"
@@ -19,14 +20,20 @@ type (
 	}
 
 	httpHandlers struct {
-		service services.BookService
-		logger  logging.Logger
-		tracer  trace.Tracer
+		logger         logging.Logger
+		service        services.BookService
+		authMiddleware middlewares.Authorization
+		tracer         trace.Tracer
 	}
 )
 
+func NewHandler(logger logging.Logger, service services.BookService, authMiddleware middlewares.Authorization) HTTPHandlers {
+	return &httpHandlers{logger, service, authMiddleware, otel.Tracer("http handler")}
+}
+
 func (h *httpHandlers) Install(router server.HTTPServer) {
 	router.Group("/books", []*server.Route{
+		server.NewRouteBuilder().Middlewares(h.authMiddleware.Handle).Build(),
 		server.NewRouteBuilder().Path("/").Method(http.MethodPost).Handler(h.postHandler).Build(),
 		server.NewRouteBuilder().Path("/{id}").Method(http.MethodGet).Handler(h.getHandler).Build(),
 		server.NewRouteBuilder().Path("/").Method(http.MethodGet).Handler(h.listHandler).Build(),
@@ -102,8 +109,4 @@ func (h *httpHandlers) deleteHandler(w http.ResponseWriter, req *http.Request) {
 	h.service.DeleteBook(req.Context())
 
 	w.WriteHeader(200)
-}
-
-func NewHandler(logger logging.Logger, service services.BookService) HTTPHandlers {
-	return &httpHandlers{service, logger, otel.Tracer("http handler")}
 }

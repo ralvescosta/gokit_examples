@@ -3,13 +3,14 @@ module github.com/ralvescosta/gokit_example/http_server_with_otlp
 go 1.18
 
 require (
-	github.com/ralvescosta/gokit/configs v1.7.1-beta.1
-	github.com/ralvescosta/gokit/configs_builder v1.7.1-beta.1
-	github.com/ralvescosta/gokit/httpw v1.7.1-beta.1
-	github.com/ralvescosta/gokit/logging v1.7.1-beta.1
-	github.com/ralvescosta/gokit/metrics v1.7.1-beta.1
-	github.com/ralvescosta/gokit/rabbitmq v1.7.1-beta.1
-	github.com/ralvescosta/gokit/tracing v1.7.1-beta.1
+	github.com/ralvescosta/gokit/auth v1.7.0
+	github.com/ralvescosta/gokit/configs v1.7.1-beta.3
+	github.com/ralvescosta/gokit/configs_builder v1.7.1-beta.3
+	github.com/ralvescosta/gokit/httpw v1.7.1-beta.3
+	github.com/ralvescosta/gokit/logging v1.7.1-beta.3
+	github.com/ralvescosta/gokit/metrics v1.7.1-beta.3
+	github.com/ralvescosta/gokit/rabbitmq v1.7.1-beta.3
+	github.com/ralvescosta/gokit/tracing v1.7.1-beta.3
 	github.com/spf13/cobra v1.7.0
 	github.com/swaggo/swag v1.16.1
 	go.opentelemetry.io/otel v1.16.0
@@ -26,6 +27,7 @@ require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/felixge/httpsnoop v1.0.3 // indirect
 	github.com/go-chi/chi/v5 v5.0.8 // indirect
+	github.com/go-jose/go-jose/v3 v3.0.0 // indirect
 	github.com/go-logr/logr v1.2.4 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-openapi/jsonpointer v0.19.6 // indirect
@@ -65,6 +67,7 @@ require (
 	go.opentelemetry.io/proto/otlp v0.20.0 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
+	golang.org/x/crypto v0.10.0 // indirect
 	golang.org/x/net v0.11.0 // indirect
 	golang.org/x/sys v0.9.0 // indirect
 	golang.org/x/text v0.10.0 // indirect
@@ -77,4 +80,9 @@ require (
 )
 
 replace github.com/ralvescosta/gokit/httpw => ../../gokit/httpw
+
+replace github.com/ralvescosta/gokit/configs => ../../gokit/configs
+
 replace github.com/ralvescosta/gokit/configs_builder => ../../gokit/configs_builder
+
+replace github.com/ralvescosta/gokit/auth => ../../gokit/auth

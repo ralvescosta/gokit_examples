@@ -5,8 +5,10 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/ralvescosta/gokit/auth/auth0"
 	"github.com/ralvescosta/gokit/configs"
 	configsBuilder "github.com/ralvescosta/gokit/configs_builder"
+	"github.com/ralvescosta/gokit/httpw/middlewares"
 	"github.com/ralvescosta/gokit/logging"
 	"github.com/ralvescosta/gokit/metrics"
 	"github.com/ralvescosta/gokit/metrics/system"
@@ -24,6 +26,7 @@ func NewContainer() (*dig.Container, error) {
 	cfg, err := configsBuilder.NewConfigsBuilder().
 		HTTP().
 		Otel().
+		Auth0().
 		Build()
 
 	if err != nil {
@@ -33,6 +36,8 @@ func NewContainer() (*dig.Container, error) {
 	container.Provide(func() *configs.Configs { return cfg.(*configs.Configs) })
 	container.Provide(func() *configs.AppConfigs { return cfg.(*configs.Configs).AppConfigs })
 	container.Provide(logging.NewDefaultLogger)
+	container.Provide(auth0.NewAuth0TokenManger)
+	container.Provide(middlewares.NewAuthorization)
 	container.Invoke(InvokeOTLPTracingExporter)
 	container.Invoke(InvokeMetricsExporter)
 	container.Provide(ProvideSignal)
