@@ -33,12 +33,11 @@ func NewHandler(logger logging.Logger, service services.BookService, authMiddlew
 
 func (h *httpHandlers) Install(router server.HTTPServer) {
 	router.Group("/books", []*server.Route{
-		server.NewRouteBuilder().Middlewares(h.authMiddleware.Handle).Build(),
 		server.NewRouteBuilder().Path("/").Method(http.MethodPost).Handler(h.postHandler).Build(),
-		server.NewRouteBuilder().Path("/{id}").Method(http.MethodGet).Handler(h.getHandler).Build(),
-		server.NewRouteBuilder().Path("/").Method(http.MethodGet).Handler(h.listHandler).Build(),
-		server.NewRouteBuilder().Path("/{id}").Method(http.MethodPut).Handler(h.putHandler).Build(),
-		server.NewRouteBuilder().Path("/{id}").Method(http.MethodDelete).Handler(h.deleteHandler).Build(),
+		server.NewRouteBuilder().Path("/{id}").Method(http.MethodGet).Handler(h.getHandler).Middlewares(h.authMiddleware.Handle).Build(),
+		server.NewRouteBuilder().Path("/").Method(http.MethodGet).Handler(h.listHandler).Middlewares(h.authMiddleware.Handle).Build(),
+		server.NewRouteBuilder().Path("/{id}").Method(http.MethodPut).Handler(h.putHandler).Middlewares(h.authMiddleware.Handle).Build(),
+		server.NewRouteBuilder().Path("/{id}").Method(http.MethodDelete).Handler(h.deleteHandler).Middlewares(h.authMiddleware.Handle).Build(),
 	})
 }
 
