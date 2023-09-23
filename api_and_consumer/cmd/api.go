@@ -6,7 +6,7 @@ import (
 	"github.com/ralvescosta/gokit_example/api_and_consumer/pkg/handlers"
 	"github.com/spf13/cobra"
 
-	"github.com/ralvescosta/gokit/httpw"
+	"github.com/ralvescosta/gokit/httpw/server"
 )
 
 type APIParams struct {
@@ -19,10 +19,13 @@ type APIParams struct {
 func api(params APIParams) error {
 	params.Logger.Debug("Stating HTTP API...")
 
-	router := httpw.
-		NewServer(params.Cfg.HTTPConfigs, params.Logger, params.Sig).
+	router := server.
+		NewHTTPServerBuilder().
+		Configs(params.Cfg).
+		Logger(params.Logger).
+		Signal(params.Sig).
 		WithTracing().
-		WithMetrics(httpw.PrometheusMetricKind).
+		WithMetrics().
 		Build()
 
 	params.Handlers.Install(router)
