@@ -5,7 +5,8 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/ralvescosta/gokit/env"
+	"github.com/ralvescosta/gokit/configs"
+	configsBuilder "github.com/ralvescosta/gokit/configs_builder"
 	"github.com/ralvescosta/gokit/logging"
 	"github.com/ralvescosta/gokit/tracing"
 	"github.com/ralvescosta/gokit_example/http_server_with_jaeger/pkg/consumers"
@@ -18,17 +19,17 @@ import (
 func NewContainer() (*dig.Container, error) {
 	container := dig.New()
 
-	cfg, err := env.
-		New().
+	cfg, err := configsBuilder.
+		NewConfigsBuilder().
 		Otel().
-		HTTPServer().
+		HTTP().
 		Build()
 
 	if err != nil {
 		return nil, err
 	}
 
-	container.Provide(func() *env.Configs { return cfg })
+	container.Provide(func() *configs.Configs { return cfg })
 	container.Provide(logging.NewDefaultLogger)
 	container.Invoke(InvokeJaegerTracingExporter)
 	container.Provide(ProvideSignal)
@@ -40,8 +41,8 @@ func NewContainer() (*dig.Container, error) {
 	return container, nil
 }
 
-func InvokeJaegerTracingExporter(cfg *env.Configs, logger logging.Logger) {
-	tracing.NewJaeger(cfg, logger).Build()
+func InvokeJaegerTracingExporter(cfg *configs.Configs, logger logging.Logger) {
+	tracing.NewJaegerBuilder().Configs(cfg).Logger(logger).Build()
 }
 
 func ProvideSignal() chan os.Signal {
