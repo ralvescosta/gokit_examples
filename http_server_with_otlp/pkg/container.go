@@ -33,8 +33,8 @@ func NewContainer() (*dig.Container, error) {
 		return nil, err
 	}
 
-	container.Provide(func() *configs.Configs { return cfg.(*configs.Configs) })
-	container.Provide(func() *configs.AppConfigs { return cfg.(*configs.Configs).AppConfigs })
+	container.Provide(func() *configs.Configs { return cfg })
+	container.Provide(func() *configs.AppConfigs { return cfg.AppConfigs })
 	container.Provide(logging.NewDefaultLogger)
 	container.Provide(auth0.NewAuth0TokenManger)
 	container.Provide(middlewares.NewAuthorization)

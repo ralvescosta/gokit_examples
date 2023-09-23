@@ -20,7 +20,9 @@ func api(params APIParams) error {
 	params.Logger.Debug("Stating HTTP API...")
 
 	router := server.
-		NewHTTPServerBuilder(params.Cfg, params.Logger).
+		NewHTTPServerBuilder().
+		Configs(params.Cfg).
+		Logger(params.Logger).
 		Signal(params.Sig).
 		WithTracing().
 		WithOpenAPI().
