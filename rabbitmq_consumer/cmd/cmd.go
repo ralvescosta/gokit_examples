@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"github.com/ralvescosta/gokit/env"
+	"github.com/ralvescosta/gokit/configs"
 	"github.com/ralvescosta/gokit/logging"
 	"github.com/ralvescosta/gokit_example/rabbitmq_consumer/pkg"
 	"github.com/spf13/cobra"
@@ -12,7 +12,7 @@ import (
 type CommonParams struct {
 	dig.In
 
-	Cfg    *env.Configs
+	Cfg    *configs.Configs
 	Logger logging.Logger
 }
 

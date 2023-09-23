@@ -28,17 +28,23 @@ type Message struct {
 func consumer(params ConsumerParams) error {
 	params.Logger.Debug("Stating RabbitMQ Consumer...")
 
-	topology := rabbitmq.
-		NewTopology().
-		Exchange(rabbitmq.NewFanout("observability")).
-		Queue(rabbitmq.NewQueue(QueueName).WithDql().WithRetry(3, 30*time.Second).Binding("observability", ""))
-
-	client, err := rabbitmq.NewClient(params.Cfg.RabbitMqConfigs, params.Logger).InstallTopology(topology)
+	channel, err := rabbitmq.NewChannel(params.Cfg.RabbitMQConfigs, params.Logger)
 	if err != nil {
 		params.Logger.Error("could not start rabbitmq client", zap.Error(err))
 	}
 
-	dispatcher := rabbitmq.NewDispatcher(params.Logger, client, topology)
+	topology, err := rabbitmq.
+		NewTopology(params.Logger).
+		Exchange(rabbitmq.NewFanoutExchange("observability")).
+		Queue(rabbitmq.NewQueue(QueueName).WithDQL().WithRetry(30*time.Second, 3)).
+		QueueBinding(rabbitmq.NewQueueBinding().Queue(QueueName).Exchange("observability")).
+		Channel(channel).
+		Apply()
+	if err != nil {
+		params.Logger.Error("topology error", zap.Error(err))
+	}
+
+	dispatcher := rabbitmq.NewDispatcher(params.Logger, channel, topology.GetQueuesDefinition())
 
 	params.BasicConsumer.Install(dispatcher)
 

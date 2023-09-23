@@ -5,7 +5,8 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/ralvescosta/gokit/env"
+	"github.com/ralvescosta/gokit/configs"
+	configsBuilder "github.com/ralvescosta/gokit/configs_builder"
 	"github.com/ralvescosta/gokit/logging"
 	"github.com/ralvescosta/gokit/tracing"
 	"github.com/ralvescosta/gokit_example/rabbitmq_consumer/pkg/consumers"
@@ -17,10 +18,10 @@ import (
 func NewContainer() (*dig.Container, error) {
 	container := dig.New()
 
-	cfg, err := env.
-		New().
+	cfg, err := configsBuilder.
+		NewConfigsBuilder().
 		Otel().
-		HTTPServer().
+		HTTP().
 		RabbitMQ().
 		Build()
 
@@ -39,14 +40,14 @@ func NewContainer() (*dig.Container, error) {
 	return container, nil
 }
 
-func ProvideConfigs(cfg *env.Configs) func() *env.Configs {
-	return func() *env.Configs {
+func ProvideConfigs(cfg *configs.Configs) func() *configs.Configs {
+	return func() *configs.Configs {
 		return cfg
 	}
 }
 
-func InvokeJaegerTracingExporter(cfg *env.Configs, logger logging.Logger) {
-	tracing.NewJaeger(cfg, logger).Build()
+func InvokeJaegerTracingExporter(cfg *configs.Configs, logger logging.Logger) {
+	tracing.NewJaegerBuilder().Configs(cfg).Logger(logger).Build()
 }
 
 func ProvideSignal() chan os.Signal {

@@ -24,10 +24,10 @@ const (
 
 func (b *basicConsumer) Install(dispatcher rabbitmq.Dispatcher) {
 	b.logger.Debug("Installing BasicConsumer...")
-	dispatcher.RegisterDispatcher(BasicQueueName, BasicMessage{}, b.basicConsumer)
+	dispatcher.Register(BasicQueueName, BasicMessage{}, b.basicConsumer)
 }
 
-func (b *basicConsumer) basicConsumer(ctx context.Context, msg any, metadata *rabbitmq.DeliveryMetadata) error {
+func (b *basicConsumer) basicConsumer(ctx context.Context, msg any, metadata any) error {
 	basic := msg.(BasicMessage)
 
 	b.logger.Info("Basic Consumer", zap.String("msg", basic.String()))
