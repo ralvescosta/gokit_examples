@@ -10,3 +10,4 @@ This repository was created to concentrate all examples about the [gokit](https:
 - [HTTP API + OTLP tracing and metrics exporter](https://github.com/ralvescosta/gokit_examples/tree/main/http_server_with_otlp)
 - [RabbitMQ Consumer + Jaeger tracing exporter](https://github.com/ralvescosta/gokit_examples/tree/main/rabbitmq_consumer)
 - [HTTP API + RabbitMQ Consumer + Jaeger tracing exporter](https://github.com/ralvescosta/gokit_examples/tree/main/api_and_consumer)
+- [MQTT Subscriber](https://github.com/ralvescosta/gokit_examples/tree/main/mqtt_subscriber)
